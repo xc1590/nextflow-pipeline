@@ -1,16 +1,15 @@
-# Nextflow pipeline: adaptor trimming and QC 
+# Nextflow pipeline: 
 
-This repository contains a small Nextflow pipeline I wrote while learning to build reproducible workflows. My goal is to move the analysis steps I currently run on an HPC cluster into Nextflow, so that everything can be reproduced and shared.
-
-The pipeline trims adapters with cutadapt, then runs FastQC on the trimmed reads. It started as a step in the metagenomic preprocessing workflow I use on the cluster.
+This repository contains a small Nextflow pipeline I wrote while learning to build reproducible workflows. My goal is to move the analysis steps I ran on an HPC cluster into Nextflow ultimately, so that everything can be reproduced and shared.
 
 ## What it does: 
+```
 samplesheet.csv --> CUTADAPT --> FASTQC
                         |
                         +--> SPADES --> BOWTIE_MAPPING
                         |                   ^
                         +-------------------+  (trimmed reads)
-
+```
 **CUTADAPT** trims adapters and low-quality ends from the paired reads.
 **FASTQC** makes a quality report on the trimmed reads.
 **SPADES** assembles the trimmed reads into contigs (metaSPAdes, `--meta`).
