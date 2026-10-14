@@ -4,6 +4,9 @@ include { CUTADAPT } from './modules/cutadapt/main'
 include { FASTQC }   from './modules/fastqc/main'
 include { SPADES }   from './modules/spades/main'
 include { BOWTIE_MAPPING } from './modules/bowtie2/main'
+include { PRODIGAL } from './modules/prodigal/main'
+include { MULTIQC } from './modules/multiQC/main'
+
 
 workflow {
 
@@ -20,8 +23,14 @@ workflow {
     CUTADAPT( ch_reads )
     FASTQC( CUTADAPT.out.reads )
     SPADES( CUTADAPT.out.reads )
-    BOWTIE_MAPPING( SPADES.out.contigs.join( CUTADAPT.out.reads ) ) // join the contigs and reads channels for mapping
+    BOWTIE_MAPPING( SPADES.out.contigs.join( CUTADAPT.out.reads ))
+    PRODIGAL( SPADES.out.contigs )
+    ch_multiqc = FASTQC.out.zip.map { meta, f -> f }
+    .mix( BOWTIE_MAPPING.out.flagstat )
+    .collect()
+    MULTIQC( ch_multiqc )
 
+    
 }
 
 
