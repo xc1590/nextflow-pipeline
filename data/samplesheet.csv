@@ -1,0 +1,3 @@
+sample,fastq_1,fastq_2
+test1,data/ERX5474932_ERR5766176_1.fastq.gz,data/ERX5474932_ERR5766176_2.fastq.gz
+test2,data/ERX5474932_ERR5766176_B_1.fastq.gz,data/ERX5474932_ERR5766176_B_2.fastq.gz

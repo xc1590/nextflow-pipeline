@@ -1,0 +1,9 @@
+.nextflow/
+.nextflow.log*
+work/
+results/
+nextflow
+data/*.fastq*
+data/*.fq*
+.DS_Store
+.vscode/
