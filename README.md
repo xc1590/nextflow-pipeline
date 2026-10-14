@@ -5,10 +5,19 @@ This repository contains a small Nextflow pipeline I wrote while learning to bui
 The pipeline trims adapters with cutadapt, then runs FastQC on the trimmed reads. It started as a step in the metagenomic preprocessing workflow I use on the cluster.
 
 ## What it does: 
-samplesheet.csv --> CUTADAPT --> FASTQC 
- 
--input: a CSV with columns "sample, fastq1, fastq2" (paired-end reads)
--output: trimmed reads, cutadapt logs, FastQC reports, and tools version, all under "result" 
+samplesheet.csv --> CUTADAPT --> FASTQC
+                        |
+                        +--> SPADES --> BOWTIE_MAPPING
+                        |                   ^
+                        +-------------------+  (trimmed reads)
+
+**CUTADAPT** trims adapters and low-quality ends from the paired reads.
+**FASTQC** makes a quality report on the trimmed reads.
+**SPADES** assembles the trimmed reads into contigs (metaSPAdes, `--meta`).
+**BOWTIE_MAPPING** maps the trimmed reads back to those contigs with Bowtie2, then sorts and indexes the alignments with samtools and counts mapped reads.
+
+1. **Input:** a CSV with columns `sample,fastq_1,fastq_2` (paired-end reads)
+2. **Output** (under `results/`): trimmed reads and cutadapt logs, FastQC reports, SPAdes contigs, and sorted BAM files with indexes, flagstat and Bowtie2 logs
 
 # Run it 
 1. Install Nextflow and conda 
@@ -16,8 +25,7 @@ samplesheet.csv --> CUTADAPT --> FASTQC
 3. nextflow run . -profile conda --input data/samplesheet.csv
 
 ## Tested
-- Nextflow 26.04.3 on macOS with `-profile conda`: all 4 tasks completed (~6 min, mostly building the conda environments the first time).
+- Nextflow 26.04.3 on macOS with `-profile conda`: cutadapt, FastQC and SPAdes, bowtie2 maaping (metaSPAdes, `--meta`) completed on two small public test samples (4 tasks, about 40 min, mostly building the conda environments the first time).
 
 ## Next
-- Add MultiQC
-- Add taxonomic profiling (Kraken2 or MetaPhlAn)
+- Add taxonomic profiling (Kraken2 or MetaPhlAn) 

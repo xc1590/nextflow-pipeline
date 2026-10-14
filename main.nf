@@ -2,6 +2,8 @@
 
 include { CUTADAPT } from './modules/cutadapt/main'
 include { FASTQC }   from './modules/fastqc/main'
+include { SPADES }   from './modules/spades/main'
+include { BOWTIE_MAPPING } from './modules/bowtie2/main'
 
 workflow {
 
@@ -17,6 +19,9 @@ workflow {
 
     CUTADAPT( ch_reads )
     FASTQC( CUTADAPT.out.reads )
+    SPADES( CUTADAPT.out.reads )
+    BOWTIE_MAPPING( SPADES.out.contigs.join( CUTADAPT.out.reads ) ) // join the contigs and reads channels for mapping
+
 }
 
 
