@@ -6,7 +6,7 @@ include { SPADES }   from './modules/spades/main'
 include { BOWTIE_MAPPING } from './modules/bowtie2/main'
 include { PRODIGAL } from './modules/prodigal/main'
 include { MULTIQC } from './modules/multiQC/main'
-
+include { METAPHLAN } from './modules/metaphlan/main'
 
 workflow {
 
@@ -29,9 +29,12 @@ workflow {
     .mix( BOWTIE_MAPPING.out.flagstat )
     .collect()
     MULTIQC( ch_multiqc )
-
-    
+    if (params.metaphlan_db) {
+    METAPHLAN( CUTADAPT.out.reads, file(params.metaphlan_db) ) // only when metaphlan_db is provided
+    }
 }
+
+
 
 
 

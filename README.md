@@ -10,6 +10,8 @@ samplesheet.csv --> CUTADAPT --> FASTQC -----------------+
                        |       +--> BOWTIE_MAPPING ------+
                        |                  ^
                        +------------------+  (trimmed reads)
+                       |
+                       +--> METAPHLAN  (optional: needs --metaphlan_db)
 ```
 
 **CUTADAPT** trims adapters and low-quality ends from the paired reads.
@@ -18,6 +20,7 @@ samplesheet.csv --> CUTADAPT --> FASTQC -----------------+
 **BOWTIE_MAPPING** maps the trimmed reads back to those contigs with Bowtie2, then sorts and indexes the alignments with samtools and counts mapped reads.
 **PROFIGAL** predicts coding protein region from metagonome 
 **MULTIQC** reds the report and log files from other tools write and puts them all into on HTML page. 
+**METAPLAN** is optional. to run it, download the newest metaphlan4 database
 
 1. **Input:** a CSV with columns `sample,fastq_1,fastq_2` (paired-end reads)
 2. **Output** (under `results/`): trimmed reads and cutadapt logs, FastQC reports, SPAdes contigs, and sorted BAM files with indexes, flagstat and Bowtie2 logs
@@ -29,6 +32,7 @@ samplesheet.csv --> CUTADAPT --> FASTQC -----------------+
 
 ## Tested
 - Nextflow 26.04.3 on macOS with `-profile conda`: cutadapt, FastQC and SPAdes, bowtie2 mapping (metaSPAdes, `--meta`), Prodigal, and MultiQC, completed on two small public test samples (6 tasks, about 50 min, mostly building the conda environments the first time).
+- Tested optional MetaPhlAn4.0.6. The Metaphlan step was also run through Slurm on an HPC cluster and successfully passed the test. 
 
 ## Next
 - Add taxonomic profiling (Kraken2 or MetaPhlAn) 
