@@ -1,6 +1,6 @@
 process METAPHLAN {
     tag   "$meta.id"
-    label 'process_hight'
+    label 'process_high'
     publishDir "${params.outdir}/metaphlan", mode: 'copy'
 
     //module 'metaphlan/4.0.6' only on slurm 

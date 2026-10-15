@@ -7,6 +7,7 @@ include { BOWTIE_MAPPING } from './modules/bowtie2/main'
 include { PRODIGAL } from './modules/prodigal/main'
 include { MULTIQC } from './modules/multiQC/main'
 include { METAPHLAN } from './modules/metaphlan/main'
+include { METAPHLAN_MERGE } from './modules/metaphlan_merge/main'
 
 workflow {
 
@@ -32,6 +33,9 @@ workflow {
     if (params.metaphlan_db) {
     METAPHLAN( CUTADAPT.out.reads, file(params.metaphlan_db) ) // only when metaphlan_db is provided
     }
+    METAPHLAN_MERGE( METAPHLAN.out.profile.map { meta, f -> f }.collect() )
+
+
 }
 
 
